@@ -1,18 +1,29 @@
 # Import convention
 import streamlit as st
 from pptx import Presentation
+from pretty_notification_box import notification_box
+import pandas as pd
+# from streamlit_custom_notification_box import custom_notification_box
 # import glob
 # import pathlib
 # import os.path
 
-st.write("""# File Picker""")
-         
-uploaded_files = st.file_uploader("Choose a PPTX file",accept_multiple_files=True)
+# st.subheader("Component with constant args")
+
+styles = {'material-icons':{'color': 'red'},
+          'title': {'font-weight':'bold'},
+          'notification-content-container': {'':''},
+          'title-text-url-container': {'',''},
+          'notification-text-link-close-container': {'',''},
+          'external-link': {'',''},
+          'close-button': {'',''}}
+
+uploaded_files = st.file_uploader("Choose a PPTX file",type=["pptx"],
+                                  accept_multiple_files=True)
 
 def upload():
-    if uploaded_files is None:
-        st.session_state["upload_state"] = "Upload a file first!"
-        st.write("Upload a file first!")
+    if not uploaded_files:
+        st.text('Load pptx file/s first')
     else:
         for uploaded_file in uploaded_files:
             prs = Presentation(uploaded_file)
@@ -22,5 +33,5 @@ def upload():
                     if hasattr(shape, "text"):
                         st.write(shape.text)
 
-st.button("Parse text out of PPTX file/s", on_click=upload)
+st.button("Parse text out of pptx file/s", on_click=upload, disabled=not uploaded_files)
 
